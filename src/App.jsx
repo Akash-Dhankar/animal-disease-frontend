@@ -8,23 +8,24 @@ function App() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/predict', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ symptoms }),
       });
 
       const data = await response.json();
+
       if (response.ok) {
         setPrediction(data.predicted_disease);
         setError('');
       } else {
         setPrediction('');
-        setError(data.error || 'An error occurred');
+        setError(data.error || 'Something went wrong');
       }
     } catch (err) {
       setPrediction('');
-      setError('Could not connect to backend');
+      setError('Failed to connect to backend');
     }
   };
 
@@ -34,7 +35,7 @@ function App() {
       <textarea
         rows="5"
         cols="50"
-        placeholder="Enter symptoms like 'depression painless lumps'"
+        placeholder="Describe the animal's symptoms in detail..."
         value={symptoms}
         onChange={(e) => setSymptoms(e.target.value)}
       />
